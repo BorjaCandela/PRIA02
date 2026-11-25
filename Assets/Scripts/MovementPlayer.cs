@@ -72,4 +72,28 @@ public class MovementPlayer : NetworkBehaviour
         if (render != null)
             render.material.color = new Color(Random.value, Random.value, Random.value);
     }
+
+    // Aqui lo nuevo, es basicamente copiar los metodos MoveRequestRpc y UpdatePositionClientRpc
+    // Enviar al servidor
+    [Rpc(SendTo.Server)]
+    public void ChangeColorRandomRpc()
+    {
+        // Definir nuevo color
+        Color newColor = new Color(
+            Random.value,
+            Random.value,
+            Random.value
+        );
+        // Y enviarlo al metodo 
+        ChangeColorClientRpc(newColor);
+    }
+
+    // Enviar a clientes y el propio host el nuevo color
+    [Rpc(SendTo.ClientsAndHost)]
+    private void ChangeColorClientRpc(Color color)
+    {
+        // Y cambiarlo!
+        if (render != null)
+            render.material.color = color;
+    }
 }
